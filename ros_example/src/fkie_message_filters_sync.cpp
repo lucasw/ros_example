@@ -11,9 +11,6 @@
 bool callback(const geometry_msgs::PointStamped& msg_a,
               const geometry_msgs::PointStamped& msg_b)
 {
-  // TODO(lucasw) it looks like the fkie approx sync always waits for a full message period
-  // before triggering the callback for the previous matched set of messages, if the source is 1Hz
-  // then the callback is a full second old
   const auto age = ros::Time::now() - msg_b.header.stamp;
   const auto stamp_diff = msg_a.header.stamp - msg_b.header.stamp;
   ROS_INFO_STREAM(age << "s " << stamp_diff << "s " << msg_a.point.x << " " << msg_b.point.x);
@@ -69,6 +66,10 @@ int main(int argc, char* argv[])
     auto policy = ApproxSync::Policy();
     policy.set_max_age(ros::Duration(1.5));
     policy.set_max_timespan(ros::Duration(max_interval));
+    // without these will have to wait a full update time period for the sync to trigger
+    // https://github.com/fkie/message_filters/issues/2
+    policy.set_min_distance(0, ros::Duration(max_interval * 2.0));
+    policy.set_min_distance(1, ros::Duration(max_interval * 2.0));
     ApproxSync combiner(policy);
     ApproxSink snk;
     combiner.connect_to_sources(sub_a, sub_b);
