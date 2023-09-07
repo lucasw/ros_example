@@ -29,9 +29,16 @@ add_executable(message_filters_sync
 
 target_link_libraries(message_filters_sync ${catkin_LIBRARIES})
 
+add_executable(node
+  src/node.cpp
+)
+
+target_link_libraries(node ${catkin_LIBRARIES})
+
 install(TARGETS
   fkie_message_filters_sync
   message_filters_sync
+  node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

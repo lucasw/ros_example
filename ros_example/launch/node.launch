@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node name="ros_example" pkg="ros_example" type="node"
+      output="screen">
+  </node>
+
+</launch>
